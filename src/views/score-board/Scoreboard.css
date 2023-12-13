@@ -1,5 +1,22 @@
-.container  {
-    display: flex;
-    justify-content: center;   
-    margin-top: 50px;
+.header {
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+}
+.body {
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+  justify-content: center;
+  margin-top: 50px;
+}
+.in-progress-game-container {
+  width: 200px;
+  background: red;
+  display: flex;
+  justify-content: space-between;
+  margin: 10px;
 }
