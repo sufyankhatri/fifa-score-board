@@ -5,25 +5,25 @@ import Newgame from "./Newgame";
 
 test("renders the modal", () => {
   const { container } = render(
-    <Newgame isOpen onRequestClose={() => {}} startGame={() => {}} />
+    <Newgame onRequestClose={() => {}} startGame={() => {}} />
   );
   expect(container).toBeDefined();
 });
 
 test("renders the close button", () => {
-  render(<Newgame isOpen onRequestClose={() => {}} startGame={() => {}} />);
+  render(<Newgame onRequestClose={() => {}} startGame={() => {}} />);
   const closeButton = screen.getByTestId("close-button");
   expect(closeButton).toBeInTheDocument();
 });
 
 test("renders the start button", () => {
-  render(<Newgame isOpen onRequestClose={() => {}} startGame={() => {}} />);
+  render(<Newgame onRequestClose={() => {}} startGame={() => {}} />);
   const startButton = screen.getByTestId("start-button");
   expect(startButton).toBeInTheDocument();
 });
 
 test("renders the select dropdown for home team and checks if it has all options", () => {
-  render(<Newgame isOpen onRequestClose={() => {}} startGame={() => {}} />);
+  render(<Newgame onRequestClose={() => {}} startGame={() => {}} />);
   const homeTeamSelect = screen.getByTestId("home-team");
   expect(homeTeamSelect).toBeInTheDocument();
   const { getByText } = within(homeTeamSelect);
@@ -35,7 +35,7 @@ test("renders the select dropdown for home team and checks if it has all options
 });
 
 test("renders the select dropdown for away team and checks if it has all options", () => {
-  render(<Newgame isOpen onRequestClose={() => {}} startGame={() => {}} />);
+  render(<Newgame onRequestClose={() => {}} startGame={() => {}} />);
   const awayTeamSelect = screen.getByTestId("away-team");
   expect(awayTeamSelect).toBeInTheDocument();
   const { getByText } = within(awayTeamSelect);

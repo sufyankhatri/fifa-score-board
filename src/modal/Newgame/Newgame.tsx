@@ -3,7 +3,6 @@ import Modal from "react-modal";
 import "./Newgame.css";
 import { teams } from "../../api/teams";
 interface INewgame {
-  isOpen: boolean;
   onRequestClose: () => void;
   startGame: (homeTeam: string, awayTeam: string) => void;
 }
@@ -25,6 +24,7 @@ const Newgame: FC<INewgame> = ({ onRequestClose, startGame }) => {
       testId="new-game-modal"
       onRequestClose={onRequestClose}
       className="new-game-modal"
+      ariaHideApp={false}
     >
       <div className="new-game-modal-header">
         <button data-testid="close-button" onClick={onRequestClose}>
@@ -43,7 +43,9 @@ const Newgame: FC<INewgame> = ({ onRequestClose, startGame }) => {
               value={homeTeam}
             >
               {teams.map((team) => (
-                <option value={team}>{team}</option>
+                <option value={team} key={team}>
+                  {team}
+                </option>
               ))}
             </select>
           </div>
@@ -58,7 +60,9 @@ const Newgame: FC<INewgame> = ({ onRequestClose, startGame }) => {
               value={awayTeam}
             >
               {teams.map((team) => (
-                <option value={team}>{team}</option>
+                <option value={team} key={team}>
+                  {team}
+                </option>
               ))}
             </select>
           </div>

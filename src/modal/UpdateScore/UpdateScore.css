@@ -1,0 +1,34 @@
+.update-score-modal-header {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.update-score-modal {
+  width: 500px;
+  height: 300px;
+  background: grey;
+  left: 35%;
+  top: 10%;
+  position: absolute;
+}
+
+.update-score-modal-body {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.update-score-modal-team-container {
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+}
+
+.update-score-modal-select-team-container {
+  display: flex;
+  flex-direction: column;
+}
+.update-score-modal-start-game-container {
+  margin-top: 30%;
+  margin-left: 40%;
+}
