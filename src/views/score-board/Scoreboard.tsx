@@ -1,10 +1,11 @@
-import React, { FC, useState } from "react";
-import "./Scoreboard.css";
-import Newgame from "../../modal/Newgame/Newgame";
+import { FC, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { Game } from "./Scoreboard.interface";
-import UpdateScore from "../../modal/UpdateScore/UpdateScore";
+import Newgame from "../../modal/Newgame/Newgame";
 import Summary from "../../modal/Summary/Summary";
+import UpdateScore from "../../modal/UpdateScore/UpdateScore";
+import "./Scoreboard.css";
+import { Game, MatchCard as MatchCardType } from "./Scoreboard.interface";
+import MatchCard from "../../modal/MatchCard/MatchCard";
 interface IScoreboard {}
 
 const Scoreboard: FC<IScoreboard> = () => {
@@ -12,8 +13,10 @@ const Scoreboard: FC<IScoreboard> = () => {
   const [showSummaryModal, setShowSummaryModal] = useState<boolean>(false);
   const [showUpdateScoreModal, setShowUpdateScoreModal] =
     useState<boolean>(false);
+  const [showMatchCardModal, setShowMatchCardModal] = useState<boolean>(false);
   const [updatingGame, setUpdatingGame] = useState<Game>();
   const [inProgressGames, setInProgressGames] = useState<Game[]>([]);
+
   return (
     <div className="container">
       <div className="header">
@@ -41,6 +44,11 @@ const Scoreboard: FC<IScoreboard> = () => {
             className="in-progress-game-container"
             key={game.id}
           >
+            {game.goals.map((goal) => (
+              <span>
+                {goal.minute}'' {goal.scorer}
+              </span>
+            ))}
             <div
               className="score-board-team-container"
               data-testid={`in-progress-home-team-${i}`}
@@ -63,6 +71,11 @@ const Scoreboard: FC<IScoreboard> = () => {
                 {game.awayTeam.score}
               </div>
             </div>
+            {game.cards.map((card) => (
+              <span>
+                {card.minute}'' {card.player} {card.type}
+              </span>
+            ))}
             <button
               data-testid="update-score-button"
               onClick={() => {
@@ -71,6 +84,15 @@ const Scoreboard: FC<IScoreboard> = () => {
               }}
             >
               update score
+            </button>
+            <button
+              data-testid="issue-card-button"
+              onClick={() => {
+                setShowMatchCardModal(true);
+                setUpdatingGame(game);
+              }}
+            >
+              issue card
             </button>
             <button
               data-testid="remove-game-button"
@@ -92,6 +114,7 @@ const Scoreboard: FC<IScoreboard> = () => {
             setInProgressGames((inProgressGames) => [
               ...inProgressGames,
               {
+                startTime: new Date(),
                 awayTeam: {
                   name: awayTeam,
                   score: 0,
@@ -106,6 +129,8 @@ const Scoreboard: FC<IScoreboard> = () => {
                     ? inProgressGames[inProgressGames.length - 1]
                         .incrementalId + 1
                     : 1,
+                goals: [],
+                cards: [],
               },
             ]);
             setShowNewGameModal(false);
@@ -128,6 +153,38 @@ const Scoreboard: FC<IScoreboard> = () => {
             );
             setInProgressGames(updatedInProgressGames);
             setShowUpdateScoreModal(false);
+          }}
+        />
+      )}
+      {showMatchCardModal && updatingGame && (
+        <MatchCard
+          onRequestClose={() => setShowMatchCardModal(false)}
+          issueCard={(player: string, cardType: "red" | "yellow") => {
+            const tempInProgressGames = [...inProgressGames];
+            const playerNames = player.split(" ");
+            const playerInitials = `(${playerNames[0][0].toUpperCase()}.${playerNames[1][0].toUpperCase()})`;
+            const currentTime = new Date();
+            const differenceInMs =
+              currentTime.getTime() - updatingGame.startTime.getTime();
+            const differenceInMinutes = Math.round(differenceInMs / 1000 / 60);
+            const updatedGameCards: MatchCardType[] = [
+              ...updatingGame.cards,
+              {
+                player: playerInitials,
+                type: cardType,
+                minute: differenceInMinutes.toString(),
+              },
+            ];
+            const updatedInProgressGames: Game[] = tempInProgressGames.map(
+              (game) => {
+                if (game.id === updatingGame.id) {
+                  return { ...game, cards: updatedGameCards };
+                }
+                return game;
+              }
+            );
+            setInProgressGames(updatedInProgressGames);
+            setShowMatchCardModal(false);
           }}
         />
       )}
